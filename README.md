@@ -8,7 +8,7 @@ MovInPocket is an Android app (Kotlin, Jetpack Compose) that shows what is **in 
 >
 > Built as a learning project, together with [Claude Code](https://claude.com/claude-code): one small milestone at a time, each planned, built, tried on real devices and committed.
 
-**Current version: 3.2** · Android 10+ · phone and Android TV / Google TV
+**Current version: 3.3** · Android 10+ · phone and Android TV / Google TV
 
 ---
 
@@ -75,9 +75,18 @@ MovInPocket ships **no content and no provider**. If you have an Xtream Codes lo
 - **Google Cast** (Chromecast, NVIDIA Shield, Google TV) and **DLNA** (LG and many others), with the phone as the remote: play, pause, seek, next episode.
 - Resume, watched marks and the playlist keep working while casting.
 
+### Live TV on Android TV *(optional, needs your provider login)*
+- **Browse by what you want to watch:** your countries, then language, then type (news, sport, movies, kids…), or the provider's own categories when its list is already well organised. The app sorts channels itself from weak hints in names, categories and guide data, so it works across providers instead of being tied to one.
+- **Every tile has a picture**, with a neat fallback when the channel has no logo. Lists show the first 100 and **Search** finds the rest, with a Clear button and a place that is remembered.
+- **TV guide:** *Now* and *Next* on the tiles and in an info banner, read from the provider's XMLTV guide. A switch lets you show only channels with a guide, or all of them, and another shows your regions or every country.
+- **Card view or list view with a live preview:** a muted picture of the highlighted channel plays beside the list.
+- **One shared player:** OK on a previewed channel goes full screen instantly without reconnecting. **Up and Down flip channels**, OK shows the info banner, and a stream that drops reconnects by itself.
+- **A dead channel exits gracefully:** one clear message, a short countdown, then back to the list.
+- The stream stops when you leave the app, so it never hogs your provider's connection.
+
 ### Android TV and Google TV
 A full second interface built for the remote control, in the same app:
-- Home, title pages, Search, My List, Settings, region setup and the player, all driven by the D-pad, with careful focus (the first poster on launch, the same poster after you come back).
+- Home, title pages, Search, My List, Settings, region setup, **Live TV** and the player, all driven by the D-pad, with careful focus (the first poster on launch, the same poster after you come back).
 - **Play, Download and Subtitles** work on the TV too, as does opening the streaming apps from "Where to watch".
 - Light and dark themes with four accent colours.
 
@@ -90,6 +99,7 @@ Dark, light or system theme, four accent colours, a custom adaptive icon, predic
 
 | Version | Date | What it brought |
 |---|---|---|
+| **3.3** | 2026-10-12 | **Live TV on Android TV** (browse by country, language and type, TV guide Now/Next, search, list view with live preview, channel flipping, automatic reconnect), a **new TV banner** with the app name, the **app version** shown in Settings |
 | **3.2** | 2026-10-11 | **Android TV app** (Home, title pages, Search, My List, Settings, region setup, player, downloads), **opening streaming apps** from the TV, **"Play with"** other players (VLC, MX Player…), **subtitles** (OpenSubtitles, timing control, a copy beside each download), the **director** on title pages, readable Light-mode TV buttons |
 | **3.1** | 2026-10-11 | **Offline downloads**: pause and resume, Wi-Fi only, saved to `Movies/MovInPocket`, played offline; minimum Android raised to 10 |
 | **3.0** | 2026-10-10 | **Advanced search**, **streaming provider login and matching**, **playback from the provider** with resume, **casting** to Google Cast and DLNA TVs (seeking works on the LG) |
@@ -105,11 +115,11 @@ Dark, light or system theme, four accent colours, a custom adaptive icon, predic
 | **Language and UI** | Kotlin 2.4, Jetpack Compose (BOM 2026.09), Material 3, Compose for TV (`androidx.tv`) |
 | **Architecture** | MVVM with manual dependency injection, state hoisted into sealed UI states, `XScreen` + `XContent` split so every screen is previewable and testable |
 | **Navigation** | Navigation Compose 2.10 with type-safe routes; the TV app reuses the phone's routes and ViewModels |
-| **Data** | Retrofit 3 + kotlinx.serialization, OkHttp 5, Coil 3, Paging 3, **Room 2.8** (7 schema versions with auto-migrations), DataStore |
+| **Data** | Retrofit 3 + kotlinx.serialization, OkHttp 5, Coil 3, Paging 3, **Room 2.8** (8 schema versions with auto-migrations), DataStore |
 | **Playback** | **Media3 1.11** (ExoPlayer, `PlayerView`), Google Cast SDK 22, a hand-written **DLNA/UPnP** controller (SSDP discovery, SOAP, DIDL-Lite) |
 | **Background work** | WorkManager (reminders, a resumable foreground download worker) |
 | **Security** | Android Keystore AES-GCM for the provider and subtitle logins; their files are excluded from backups; stream links are never logged or shown |
-| **Quality** | ≈18,500 lines of Kotlin, **448 unit tests** (fakes, virtual time, in-process fake servers), lint with zero errors, a minified release build checked on a phone and an NVIDIA Shield before each release |
+| **Quality** | ≈22,500 lines of Kotlin, **631 unit tests** (fakes, virtual time, in-process fake servers), lint with zero errors, a minified release build checked on a phone and an NVIDIA Shield before each release |
 
 Data sources: [TMDB](https://www.themoviedb.org/) (titles, credits), JustWatch via TMDB and the [Streaming Availability API](https://www.movieofthenight.com/about/api) (where to watch), [OpenSubtitles](https://www.opensubtitles.com/) (subtitles), and **your own provider** for playback.
 
@@ -120,6 +130,7 @@ Data sources: [TMDB](https://www.themoviedb.org/) (titles, credits), JustWatch v
 - **Other players don't report back.** After watching in VLC or MX Player, "Continue" and "Watched" don't update and the next episode doesn't start by itself. The built-in player does all of that.
 - **Samsung QLED TV from 2018 (Q6):** casting to it doesn't work. It rejects the provider's link, and the only fix found (relaying through the phone) needs the phone awake for the whole film, so it was dropped. Apple TV can't be targeted by an Android app.
 - **Subtitles:** need your own OpenSubtitles key and account, free accounts have a daily download allowance, Malayalam is thinly covered, and a subtitle may need the Earlier / Later control to line up with your copy.
+- **Live TV** depends on what your provider offers: many channels have no guide data, and some providers allow only one stream at a time. Channel sorting is a best guess, so a few channels can land in the wrong place. It is on Android TV only for now.
 - **Streaming apps on a TV** open the app, and the exact title only when the app supports it.
 - **Android 10 or newer** is required (downloads use the shared `Movies` folder).
 
